@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Firebase v10.13.2 Data in Table</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container mt-3">
+        <table class="table table-dark">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Humidity</th>
+                    <th>LED</th>
+                    <th>Light</th>
+                    <th>Temperature</th>
+                    <th>Time</th>
+                    <th>Times</th>
+                </tr>
+            </thead>
+            <tbody id="tbody1"></tbody> <!-- Corrected to add tbody -->
+        </table>
+    </div>
+
+    <script type="module">
+        let No = 0;
+        const tbody = document.getElementById("tbody1");
+
+        function AddItemToTable(humidity, led, light, temperature, time, times) {
+            const trow = document.createElement("tr");
+
+            trow.innerHTML = `
+                <td>${++No}</td>
+                <td>${humidity}</td>
+                <td>${led}</td>
+                <td>${light}</td>
+                <td>${temperature}</td>
+                <td>${time}</td>
+                <td>${times}</td>
+            `;
+
+            tbody.appendChild(trow);
+        }
+
+        function AddAllItemsToTable(logs) {
+            No = 0;
+            tbody.innerHTML = "";
+            logs.forEach(element => {
+                AddItemToTable(
+                    element.humidity,
+                    element.led,
+                    element.light,
+                    element.temperature,
+                    element.time,
+                    element.times
+                );
+            });
+        }
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-analytics.js";
+        import { getDatabase, ref, child, get } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCflwLcZDItrDyvrpAX1jRJOvlV6yN7HEQ",
+            authDomain: "fir-dht-2024-ce7d7.firebaseapp.com",
+            databaseURL: "https://fir-dht-2024-ce7d7-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "fir-dht-2024-ce7d7",
+            storageBucket: "fir-dht-2024-ce7d7.appspot.com",
+            messagingSenderId: "664651908781",
+            appId: "1:664651908781:web:f7db6274f5e661c31ea824",
+            measurementId: "G-HD89KF5LB1"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getDatabase();
+
+        function GetAllDataRealTime() {
+            const dbRef = ref(db,"logs");
+            onValue(dbRef, (snapshot) => {
+                var logs = [];
+                    snapshot.forEach((childSnapshot) => {
+                        logs.push(childSnapshot.val());
+                    });
+                    AddAllItemsToTable(logs);
+                })
+        }
+        window.onload = GetAllDataRealTime;
+    </script>
+</body>
+</html>

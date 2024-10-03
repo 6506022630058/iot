@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Firebase Logs</title>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCflwLcZDItrDyvrpAX1jRJOvlV6yN7HEQ",
+            authDomain: "fir-dht-2024-ce7d7.firebaseapp.com",
+            databaseURL: "https://fir-dht-2024-ce7d7-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "fir-dht-2024-ce7d7",
+            storageBucket: "fir-dht-2024-ce7d7.appspot.com",
+            messagingSenderId: "664651908781",
+            appId: "1:664651908781:web:f7db6274f5e661c31ea824",
+            measurementId: "G-HD89KF5LB1"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database(app);
+
+        // Function to fetch all logs
+        function fetchAllLogs() {
+            fetch('https://fir-dht-2024-ce7d7-default-rtdb.asia-southeast1.firebasedatabase.app/logs/log_1727009638')
+                .then(response => response.json())
+                .then(data => {
+                    console.log("All Logs:", data); // Logs all data
+                    displayLogs(data);
+                })
+                .catch(error => {
+                    console.error("Error fetching logs:", error);
+                });
+        }
+
+        // Function to display logs in HTML
+        function displayLogs(logs) {
+            const logContainer = document.getElementById('logContainer');
+            logContainer.innerHTML = ''; // Clear existing logs
+
+            for (const logId in logs) {
+                const logEntry = document.createElement('div');
+                const logData = logs[logId];
+                
+                logEntry.innerHTML = `
+                    <h3>${logId}</h3>
+                    <p>Humidity: ${logData.humidity} %</p>
+                    <p>LED: ${logData.led}</p>
+                    <p>Light: ${logData.light} Lux</p>
+                    <p>Temperature: ${logData.temperature} °C</p>
+                    <p>Time: ${logData.time}</p>
+                    <p>Times: ${logData.times}</p>
+                    <hr>
+                `;
+                logContainer.appendChild(logEntry);
+            }
+        }
+
+        // Call fetchAllLogs on page load
+        window.onload = () => {
+            fetchAllLogs();
+        };
+    </script>
+</head>
+<body>
+    <h1>Firebase Logs</h1>
+    <div id="logContainer"></div>
+</body>
+</html>

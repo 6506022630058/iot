@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Read Example</title>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com.firebasejs/8.6.8/firebase-database.js"></script>
+</head>
+<body>
+    <h1>Firebase Realtime Database Example</h1>
+    <div id="data"></div>
+
+    <script>
+        // Firebase configuration
+        var config = {
+                apiKey: "AIzaSyCflwLcZDItrDyvrpAX1jRJOvlV6yN7HEQ",
+                authDomain: "fir-dht-2024-ce7d7.firebaseapp.com",
+                databaseURL: "https://fir-dht-2024-ce7d7-default-rtdb.asia-southeast1.firebasedatabase.app",
+                projectId: "fir-dht-2024-ce7d7",
+                storageBucket: "fir-dht-2024-ce7d7.appspot.com",
+                messagingSenderId: "664651908781"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(config);
+
+        // Reference to the database
+        var database = firebase.database();
+
+        // Read data from a specified path
+        var dataRef = database.ref('logs'); // Replace 'logDHT' with your database path
+
+        dataRef.on('value', function(snapshot) {
+            var data = snapshot.val();
+            console.log(data);
+            document.getElementById('data').innerHTML = JSON.stringify(data, null, 2);
+        }, function(error) {
+            console.error("Error reading data: ", error);
+        });
+    </script>
+</body>
+</html>
